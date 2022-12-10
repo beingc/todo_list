@@ -2,7 +2,7 @@
 # Date: 2022-11-01
 # Desc: a to-do list app
 
-import sys
+import time
 import argparse
 import sqlite3
 
@@ -19,19 +19,53 @@ def parser_args():
     return parser.parse_args()
 
 
-def init_db():
+def init_data():
     conn = sqlite3.connect('test.db')
     c = conn.cursor()
-    c.execute(""" create table todo_list 
+    c.execute(""" create table if not exists todo_list 
     (todoid int,
     todoname text,
     createtime text,
     updatetime text,
     completetime text);""")
+    c.close()
+
+
+def show_todo():
+    conn = sqlite3.connect('test.db')
+    c = conn.cursor()
+    c.execute(""" select * from todo_list;""")
+    values = c.fetchall()
+    if values:
+        print("{:>10} {:>20} {:>14} {:>14} {:>14}".format("todoid", "todoname", "createtime", "updatetime",
+                                                          "completetime"))
+        for i in values:
+            print("{:>10} {:>20} {:>14} {:>14} {:>14}".format(i[0], i[1], i[2], i[3], i[4]))
+    else:
+        print("todo list is empty")
+    conn.close()
 
 
 def add_todo(item):
-    pass
+    todoid = int(time.time())
+    todoname = item
+    createtime = time.strftime("%Y%m%d%H%M%S", time.localtime())
+    updatetime = ""
+    completetime = ""
+    conn = sqlite3.connect('test.db')
+    c = conn.cursor()
+    c.execute("insert into todo_list(todoid, todoname, createtime, updatetime, completetime) values (?,?,?,?,?);",
+              (todoid,
+               todoname, createtime, updatetime, completetime))
+    conn.commit()
+    conn.close()
+
+
+def reset_todo():
+    conn = sqlite3.connect('test.db')
+    c = conn.cursor()
+    c.execute(""" drop table todo_list;""")
+    conn.close()
 
 
 def update_todo(item):
@@ -46,22 +80,17 @@ def delete_todo(item):
     pass
 
 
-def show_todo():
-    pass
-
-
-def reset_todo():
-    pass
-
-
 if __name__ == '__main__':
     args = parser_args()
-    init_db()
+    init_data()
+    show_todo()
     if args.add:
         add_todo(args.add)
     if args.delete:
         delete_todo(args.delete)
     if args.update:
         update_todo(args.update)
+    if args.reset:
+        reset_todo()
 
-# todo: do it now
+# todo: a lot todo
