@@ -1,4 +1,5 @@
 # pycharm
 .idea
 .temp
+.test
 *.db
