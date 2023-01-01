@@ -77,7 +77,12 @@ def complete_todo(item):
 
 
 def delete_todo(item):
-    pass
+    todoname = item
+    conn = sqlite3.connect('test.db')
+    c = conn.cursor()
+    c.execute("delete from todo_list where todoname='{}'".format(todoname))
+    conn.commit()
+    conn.close()
 
 
 if __name__ == '__main__':
