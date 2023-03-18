@@ -3,3 +3,6 @@
 .temp
 .test
 *.db
+venv
+temp
+**/__pycache__

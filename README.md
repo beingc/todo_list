@@ -4,13 +4,15 @@
 
 ## 表设计
 
-| 字段名         | 字段说明       | 备注  |
-|-------------|------------|-----|
-| id          |            |
-| item        |            |
-| desc        |            |
-| status      | 0:待办 1:已完成 |     |
-| deadline    |            |     | 
-| create_time |            |
-| update_time |            |
+table: todolist
+
+| name        | description   | remark |
+|-------------|---------------|--------|
+| task_id     |               |        |
+| task        |               |        |
+| description |               |        |
+| status      | 0:todo 1:done |        |
+| deadline    |               |        | 
+| create_time |               |        |
+| update_time |               |        |
 
