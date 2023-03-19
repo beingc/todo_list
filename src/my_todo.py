@@ -3,6 +3,7 @@
 # Desc: to-do list app
 
 import sqlite3
+from datetime import datetime
 
 
 class TodoList:
@@ -21,8 +22,9 @@ class TodoList:
         self.conn.close()
 
     def add_task(self, task, description=None, deadline=None):
-        self.conn.execute("INSERT INTO todolist (task, description, deadline) VALUES (?, ?, ?)",
-                          (task, description, deadline))
+        create_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        self.conn.execute("INSERT INTO todolist (task, description, deadline, create_time) VALUES (?, ?, ?, ?)",
+                          (task, description, deadline, create_time))
         self.conn.commit()
 
     def delete_task(self, task_id):
@@ -30,26 +32,23 @@ class TodoList:
         self.conn.commit()
 
     def update_task(self, task_id, task=None, description=None, status=None, deadline=None):
-        update_query = "UPDATE todolist SET"
-        if task:
-            update_query += " task=?,"
-        if description:
-            update_query += " description=?,"
-        if status is not None:
-            update_query += " status=?,"
-        if deadline:
-            update_query += " deadline=?,"
-        update_query = update_query.rstrip(',') + " WHERE task_id=?"
-
         params = []
+        set_clause = []
         if task:
+            set_clause.append("task = ?")
             params.append(task)
         if description:
+            set_clause.append("description = ?")
             params.append(description)
         if status is not None:
+            set_clause.append("status = ?")
             params.append(status)
         if deadline:
+            set_clause.append("deadline = ?")
             params.append(deadline)
+        set_clause = ", ".join(set_clause)
+
+        update_query = "UPDATE todolist SET {} WHERE task_id = ?".format(set_clause)
         params.append(task_id)
 
         self.conn.execute(update_query, tuple(params))
@@ -59,7 +58,8 @@ class TodoList:
         cursor = self.conn.execute("SELECT * FROM todolist WHERE task_id=?", (task_id,))
         row = cursor.fetchone()
         if row:
-            return {'task_id': row[0], 'task': row[1], 'description': row[2], 'status': bool(row[3])}
+            return {'task_id': row[0], 'task': row[1], 'description': row[2], 'status': bool(row[3]),
+                    'deadline': row[4], 'create_time': row[5]}
         else:
             return None
 
@@ -68,7 +68,9 @@ class TodoList:
         rows = cursor.fetchall()
         task_list = []
         for row in rows:
-            task_list.append({'task_id': row[0], 'task': row[1], 'description': row[2], 'status': bool(row[3])})
+            task_list.append(
+                {'task_id': row[0], 'task': row[1], 'description': row[2], 'status': bool(row[3]), 'deadline': row[4],
+                 'create_time': row[5]})
         return task_list
 
     def complete_task(self, task_id):
