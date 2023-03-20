@@ -8,12 +8,13 @@ from datetime import datetime
 
 class TodoList:
     def __init__(self):
-        self.conn = sqlite3.connect('todolist.db')
+        # SQLite objects created in a thread can only be used in that same thread
+        self.conn = sqlite3.connect('todolist.db', check_same_thread=False)
         self.conn.execute('''CREATE TABLE IF NOT EXISTS todolist
                              (task_id INTEGER PRIMARY KEY AUTOINCREMENT,
                               task TEXT NOT NULL,
                               description TEXT,
-                              status BOOLEAN NOT NULL DEFAULT 0,
+                              status INTEGER NOT NULL DEFAULT 0,
                               deadline TEXT,
                               create_time TEXT,
                               update_time TEXT)''')
@@ -34,18 +35,22 @@ class TodoList:
     def update_task(self, task_id, task=None, description=None, status=None, deadline=None):
         params = []
         set_clause = []
+        current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         if task:
             set_clause.append("task = ?")
             params.append(task)
         if description:
             set_clause.append("description = ?")
             params.append(description)
-        if status is not None:
+        if status:
             set_clause.append("status = ?")
             params.append(status)
         if deadline:
             set_clause.append("deadline = ?")
             params.append(deadline)
+        if len(params) > 0:
+            set_clause.append("update_time = ?")
+            params.append(current_time)
         set_clause = ", ".join(set_clause)
 
         update_query = "UPDATE todolist SET {} WHERE task_id = ?".format(set_clause)
@@ -58,8 +63,8 @@ class TodoList:
         cursor = self.conn.execute("SELECT * FROM todolist WHERE task_id=?", (task_id,))
         row = cursor.fetchone()
         if row:
-            return {'task_id': row[0], 'task': row[1], 'description': row[2], 'status': bool(row[3]),
-                    'deadline': row[4], 'create_time': row[5]}
+            return {'task_id': row[0], 'task': row[1], 'description': row[2], 'status': row[3],
+                    'deadline': row[4], 'create_time': row[5], 'update_time': row[6]}
         else:
             return None
 
@@ -69,15 +74,15 @@ class TodoList:
         task_list = []
         for row in rows:
             task_list.append(
-                {'task_id': row[0], 'task': row[1], 'description': row[2], 'status': bool(row[3]), 'deadline': row[4],
-                 'create_time': row[5]})
+                {'task_id': row[0], 'task': row[1], 'description': row[2], 'status': row[3], 'deadline': row[4],
+                 'create_time': row[5], 'update_time': row[6]})
         return task_list
 
     def complete_task(self, task_id):
-        self.update_task(task_id, status=True)
+        self.update_task(task_id, status="1")
 
     def incomplete_task(self, task_id):
-        self.update_task(task_id, status=False)
+        self.update_task(task_id, status="0")
 
     def reset_db(self):
         self.conn.execute("DROP TABLE IF EXISTS todolist;")

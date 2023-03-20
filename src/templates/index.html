@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>To-Do List</title>
+</head>
+<body>
+<h1>To-Do List</h1>
+<form method="POST" action="{{ url_for('add_task') }}">
+    <label for="task">Task:</label>
+    <input type="text" name="new_task"/>
+    <label for="description">Description:</label>
+    <input type="text" name="description"/>
+    <button type="submit">Add Task</button>
+</form>
+
+{% if todo_list %}
+<ul>
+    {% for task in todo_list %}
+    <li>{{ task.task_id }} {{ task.task }} {{ task.description }} {{ task.status }} {{ task.deadline }} {{
+        task.create_time }} {{ task.update_time}}
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No task yet!</p>
+{% endif %}
+</body>
+</html>
