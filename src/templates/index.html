@@ -25,5 +25,15 @@
 {% else %}
 <p>No task yet!</p>
 {% endif %}
+<form method="POST" action="{{ url_for('delete_task') }}">
+    <label for="description">Task ID:</label>
+    <input type="text" name="task_id"/>
+    <button type="submit">Delete Task</button>
+</form>
+<form method="POST" action="{{ url_for('complete_task') }}">
+    <label for="description">Task ID:</label>
+    <input type="text" name="task_id"/>
+    <button type="submit">Complete Task</button>
+</form>
 </body>
 </html>

@@ -37,8 +37,7 @@ form input[type="text"] {
 }
 
 button[type="submit"] {
-  display: block;
-  width: 100%;
+  width: 10%;
   height: 40px;
   background-color: #007bff;
   color: #fff;

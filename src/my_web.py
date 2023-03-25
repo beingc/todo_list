@@ -19,7 +19,23 @@ def add_task():
         return redirect(url_for('index'))
 
 
+@app.route('/delete_task', methods=['POST'])
+def delete_task():
+    if request.method == 'POST':
+        task_id = request.form['task_id']
+        mytodo.delete_task(task_id)
+        return redirect(url_for('index'))
+
+
+@app.route('/complete_task', methods=['POST'])
+def complete_task():
+    if request.method == 'POST':
+        task_id = request.form['task_id']
+        mytodo.complete_task(task_id)
+        return redirect(url_for('index'))
+
+
 if __name__ == '__main__':
     mytodo = TodoList()
     # mytodo.add_task("test1")
-    app.run()
+    app.run(debug=True)
