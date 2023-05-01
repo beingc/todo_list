@@ -11,7 +11,6 @@ class TestTodoList(TestCase):
 
     def tearDown(self):
         self.todo.reset_db()
-        del self.todo
 
     def test_add_task(self):
         self.todo.add_task('Test Task2')
@@ -19,20 +18,20 @@ class TestTodoList(TestCase):
         self.assertEqual(len(tasks), 2)
         self.assertEqual(tasks[1]['task'], 'Test Task2')
 
-    def test_add_task_with_description(self):
-        self.todo.add_task('Test Task2', 'description2')
+    def test_add_task_with_detail(self):
+        self.todo.add_task('Test Task2', 'detail2')
         tasks = self.todo.get_all_tasks()
         self.assertEqual(len(tasks), 2)
-        self.assertEqual(tasks[1]['description'], 'description2')
+        self.assertEqual(tasks[1]['detail'], 'detail2')
 
     def test_add_task_with_deadline(self):
-        self.todo.add_task('Test Task2', 'description2', 'deadline2')
+        self.todo.add_task('Test Task2', 'detail2', 'deadline2')
         tasks = self.todo.get_all_tasks()
         self.assertEqual(len(tasks), 2)
         self.assertEqual(tasks[1]['deadline'], 'deadline2')
 
     def test_add_task_create_time(self):
-        self.todo.add_task('Test Task2', 'description2', 'deadline2')
+        self.todo.add_task('Test Task2', 'detail2', 'deadline2')
         tasks = self.todo.get_all_tasks()
         self.assertEqual(len(tasks), 2)
         create_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -58,20 +57,20 @@ class TestTodoList(TestCase):
         task = self.todo.get_task(1)
         self.assertEqual(task['task'], "test Task11")
 
-    def test_update_task_with_description(self):
-        self.todo.update_task(1, "test Task12", "description12")
+    def test_update_task_with_detail(self):
+        self.todo.update_task(1, "test Task12", "detail12")
         task = self.todo.get_task(1)
-        self.assertEqual(task['description'], "description12")
+        self.assertEqual(task['detail'], "detail12")
 
     def test_update_task_with_deadline(self):
-        self.todo.update_task(1, "test Task13", "description13", deadline="deadline13")
+        self.todo.update_task(1, "test Task13", "detail13", deadline="deadline13")
         task = self.todo.get_task(1)
         self.assertEqual(task['deadline'], "deadline13")
 
     def test_update_task_with_update_time(self):
         create_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         time.sleep(1)
-        self.todo.update_task(1, "test Task14", "description14", deadline="deadline14")
+        self.todo.update_task(1, "test Task14", "detail14", deadline="deadline14")
         update_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         task = self.todo.get_task(1)
         self.assertEqual(task['create_time'], create_time)

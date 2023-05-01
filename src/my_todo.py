@@ -8,12 +8,13 @@ from datetime import datetime
 
 class TodoList:
     def __init__(self):
-        # SQLite objects created in a thread can only be used in that same thread
+        # 报错: SQLite objects created in a thread can only be used in that same thread
+        # 修改: check_same_thread=False
         self.conn = sqlite3.connect('todolist.db', check_same_thread=False)
         self.conn.execute('''CREATE TABLE IF NOT EXISTS todolist
                              (task_id INTEGER PRIMARY KEY AUTOINCREMENT,
                               task TEXT NOT NULL,
-                              description TEXT,
+                              detail TEXT,
                               status INTEGER NOT NULL DEFAULT 0,
                               deadline TEXT,
                               create_time TEXT,
@@ -22,26 +23,26 @@ class TodoList:
     def __del__(self):
         self.conn.close()
 
-    def add_task(self, task, description=None, deadline=None):
+    def add_task(self, task, detail=None, deadline=None):
         create_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        self.conn.execute("INSERT INTO todolist (task, description, deadline, create_time) VALUES (?, ?, ?, ?)",
-                          (task, description, deadline, create_time))
+        self.conn.execute("INSERT INTO todolist (task, detail, deadline, create_time) VALUES (?, ?, ?, ?)",
+                          (task, detail, deadline, create_time))
         self.conn.commit()
 
     def delete_task(self, task_id):
         self.conn.execute("DELETE FROM todolist WHERE task_id=?", (task_id,))
         self.conn.commit()
 
-    def update_task(self, task_id, task=None, description=None, status=None, deadline=None):
+    def update_task(self, task_id, task=None, detail=None, status=None, deadline=None):
         params = []
         set_clause = []
         current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         if task:
             set_clause.append("task = ?")
             params.append(task)
-        if description:
-            set_clause.append("description = ?")
-            params.append(description)
+        if detail:
+            set_clause.append("detail = ?")
+            params.append(detail)
         if status:
             set_clause.append("status = ?")
             params.append(status)
@@ -63,7 +64,7 @@ class TodoList:
         cursor = self.conn.execute("SELECT * FROM todolist WHERE task_id=?", (task_id,))
         row = cursor.fetchone()
         if row:
-            return {'task_id': row[0], 'task': row[1], 'description': row[2], 'status': row[3],
+            return {'task_id': row[0], 'task': row[1], 'detail': row[2], 'status': row[3],
                     'deadline': row[4], 'create_time': row[5], 'update_time': row[6]}
         else:
             return None
@@ -72,10 +73,8 @@ class TodoList:
         cursor = self.conn.execute("SELECT * FROM todolist")
         rows = cursor.fetchall()
         task_list = []
-        for row in rows:
-            task_list.append(
-                {'task_id': row[0], 'task': row[1], 'description': row[2], 'status': row[3], 'deadline': row[4],
-                 'create_time': row[5], 'update_time': row[6]})
+        task_list = [{'task_id': row[0], 'task': row[1], 'detail': row[2], 'status': row[3], 'deadline': row[4],
+                      'create_time': row[5], 'update_time': row[6]} for row in rows]
         return task_list
 
     def complete_task(self, task_id):
@@ -89,11 +88,4 @@ class TodoList:
 
 
 if __name__ == '__main__':
-    todo_list = TodoList()
-    todo_list.add_task('Buy groceries', 'Milk, bread, eggs')
-    todo_list.add_task('Finish project')
-    todo_list.complete_task(1)
-    todo_list.incomplete_task(2)
-    tasks = todo_list.get_all_tasks()
-    print(tasks)
-    todo_list.reset_db()
+    pass
