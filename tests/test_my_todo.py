@@ -1,7 +1,7 @@
 import time
 from datetime import datetime
 from unittest import TestCase
-from src.my_todo import TodoList
+from src.backend.todolist import TodoList
 
 
 class TestTodoList(TestCase):

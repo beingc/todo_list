@@ -2,7 +2,7 @@
 
 import unittest
 from datetime import datetime
-from src.my_todo import TodoList
+from src.backend.todolist import TodoList
 
 
 class TestTodoList(unittest.TestCase):

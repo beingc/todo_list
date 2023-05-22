@@ -2,15 +2,18 @@
 # Date: 2023-03-18
 # Desc: to-do list app
 
+import os
 import sqlite3
 from datetime import datetime
+
+db_path = os.path.join(os.path.dirname(__file__), "todolist.db")
 
 
 class TodoList:
     def __init__(self):
         # 报错: SQLite objects created in a thread can only be used in that same thread
         # 修改: check_same_thread=False
-        self.conn = sqlite3.connect('todolist.db', check_same_thread=False)
+        self.conn = sqlite3.connect(db_path, check_same_thread=False)
         self.conn.execute('''CREATE TABLE IF NOT EXISTS todolist
                              (task_id INTEGER PRIMARY KEY AUTOINCREMENT,
                               task TEXT NOT NULL,
