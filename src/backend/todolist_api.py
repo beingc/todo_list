@@ -14,8 +14,8 @@ def index():
 
 @app.route('/add_task', methods=['POST'])
 def add_task():
-    new_task = request.json()
-    mytodo.add_task(task=new_task['task'], detail=['detail'], deadline=['deadline'])
+    new_task = request.get_json()
+    mytodo.add_task(task=new_task['task'], detail=new_task['detail'], deadline=new_task['deadline'])
     return jsonify({'result': 'success'})
 
 
@@ -33,5 +33,5 @@ def complete_task(task_id):
 
 if __name__ == '__main__':
     mytodo = TodoList()
-    mytodo.add_task("test1")
+    # mytodo.add_task("test1")
     app.run(debug=True, port=5001)

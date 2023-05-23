@@ -1,14 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
     <meta charset="UTF-8">
     <script src="./static/vue.min.js"></script>
     <title>ToDo List</title>
 </head>
+
 <body>
     <div id="app">
         <table>
-            <thread>
+            <thead>
                 <tr>
                     <th>Task ID</th>
                     <th>Task</th>
@@ -19,7 +21,7 @@
                     <th>Update Time</th>
                     <th>Actions</th>
                 </tr>
-            </thread>
+            </thead>
             <tbody>
                 <tr v-for="task in tasks" :key="task.task_id">
                     <td>{{task.task_id}}</td>
@@ -29,10 +31,21 @@
                     <td>{{task.deadline}}</td>
                     <td>{{task.create_time}}</td>
                     <td>{{task.update_time}}</td>
+                    <td>
+                        <div>
+                            <button>Done</button>
+                            <button>Delete</button>
+                        </div>
+                    </td>
                 </tr>
             </tbody>
         </table>
+        <form>
+            <input type="text" placeholder="Add new task">
+            <button>Add</button>
+        </form>
     </div>
     <script src="./static/todolist.js"></script>
 </body>
+
 </html>
