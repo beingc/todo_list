@@ -3,9 +3,9 @@ new Vue({
     data: {
         tasks: [],
         formData: {
-            task:'',
-            detail:'',
-            deadline:''
+            task: '',
+            detail: '',
+            deadline: ''
         }
     },
     methods: {
@@ -14,16 +14,27 @@ new Vue({
                 .then(response => response.json())
                 .then(data => this.tasks = data)
         },
-        addtask: function () {
-            const data = { name: this.name, email: this.email }
+        addTask: function () {
             fetch('http://127.0.0.1:5001/add_task', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
+                body: JSON.stringify(formData)
             })
                 .then(response => response.json())
-                .then(data => console.log(data))
-                .catch(error => console.error(error))
+                .then(data => {
+                    console.log(data)
+                    this.getalltask()
+                })
+        },
+        delTask: function (task_id) {
+            fetch('http://127.0.0.1:5001/delete_task/' + task_id, {
+                method: 'DELETE'
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data)
+                    this.getalltask()
+                })
         }
     },
     mounted() {

@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <script src="./static/vue.min.js"></script>
+    <script src="./static/vue.js"></script>
     <title>ToDo List</title>
 </head>
 
@@ -34,15 +34,15 @@
                     <td>
                         <div>
                             <button>Done</button>
-                            <button>Delete</button>
+                            <button @click="delTask(task.task_id)">Delete</button>
                         </div>
                     </td>
                 </tr>
             </tbody>
         </table>
-        <form>
-            <input type="text" placeholder="Add new task">
-            <button>Add</button>
+        <form @submit.prevent="addTask" method="POST">
+            <input type="text" placeholder="Add new task" v-model="formData.task">
+            <button type="submit">Add</button>
         </form>
     </div>
     <script src="./static/todolist.js"></script>
