@@ -6,25 +6,34 @@ new Vue({
             task: '',
             detail: '',
             deadline: ''
-        }
+        },
+        isShowTips: false,
+        isShowMore: false
     },
     methods: {
-        getalltask: function () {
+        getAllTask: function () {
             fetch('http://127.0.0.1:5001/')
                 .then(response => response.json())
-                .then(data => this.tasks = data)
+                .then(data => { this.tasks = data })
         },
         addTask: function () {
-            fetch('http://127.0.0.1:5001/add_task', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
-            })
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data)
-                    this.getalltask()
+            this.isShowTips = false
+            if (this.formData.task) {
+                fetch('http://127.0.0.1:5001/add_task', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(this.formData)
                 })
+                    .then(response => response.json())
+                    .then(data => {
+                        this.getAllTask()
+                        this.formData.task = ""
+                        this.formData.detail = ""
+                        this.formData.deadline = ""
+                    })
+            } else {
+                this.isShowTips = true
+            }
         },
         delTask: function (task_id) {
             fetch('http://127.0.0.1:5001/delete_task/' + task_id, {
@@ -32,12 +41,33 @@ new Vue({
             })
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data)
-                    this.getalltask()
+                    this.getAllTask()
                 })
+        },
+        completeTask: function (task_id) {
+            fetch('http://127.0.0.1:5001/complete_task/' + task_id, {
+                method: 'POST'
+            })
+                .then(response => response.json())
+                .then(data => {
+                    this.getAllTask()
+                })
+        },
+        reDoTask: function (task_id) {
+            fetch('http://127.0.0.1:5001/incomplete_task/' + task_id, {
+                method: 'POST'
+            })
+                .then(response => response.json())
+                .then(data => {
+                    this.getAllTask()
+                })
+        },
+        showMore: function () {
+            this.isShowMore = !this.isShowMore
+            this.isShowTips = false
         }
     },
     mounted() {
-        this.getalltask()
+        this.getAllTask()
     }
 })

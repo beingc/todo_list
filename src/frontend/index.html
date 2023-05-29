@@ -33,16 +33,24 @@
                     <td>{{task.update_time}}</td>
                     <td>
                         <div>
-                            <button>Done</button>
+                            <button v-if="!task.status" @click="completeTask(task.task_id)">Done</button>
+                            <button v-else @click="reDoTask(task.task_id)">Redo</button>
                             <button @click="delTask(task.task_id)">Delete</button>
                         </div>
                     </td>
                 </tr>
             </tbody>
         </table>
-        <form @submit.prevent="addTask" method="POST">
+        <form @submit.prevent="addTask">
             <input type="text" placeholder="Add new task" v-model="formData.task">
             <button type="submit">Add</button>
+            <span v-if="this.isShowTips">Please input task!</span>
+            <button @click.prevent="showMore">···</button>
+            <div v-if="this.isShowMore">
+                <textarea placeholder="Add task details" v-model="formData.detail"></textarea>
+                <br>
+                <input type="datetime-local" v-model="formData.deadline">
+            </div>
         </form>
     </div>
     <script src="./static/todolist.js"></script>

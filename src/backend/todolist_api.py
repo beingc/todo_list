@@ -31,6 +31,12 @@ def complete_task(task_id):
     return jsonify({'result': 'success'})
 
 
+@app.route('/incomplete_task/<int:task_id>', methods=['POST'])
+def incomplete_task(task_id):
+    mytodo.incomplete_task(task_id)
+    return jsonify({'result': 'success'})
+
+
 if __name__ == '__main__':
     mytodo = TodoList()
     # mytodo.add_task("test1")
