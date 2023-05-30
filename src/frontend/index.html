@@ -9,6 +9,7 @@
 
 <body>
     <div id="app">
+        <input type="text" placeholder="search task" v-model="keyWord">
         <table>
             <thead>
                 <tr>
@@ -23,7 +24,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="task in tasks" :key="task.task_id">
+                <tr v-for="task in filterTasks" :key="task.task_id">
                     <td>{{task.task_id}}</td>
                     <td>{{task.task}}</td>
                     <td>{{task.detail}}</td>
@@ -44,9 +45,9 @@
         <form @submit.prevent="addTask">
             <input type="text" placeholder="Add new task" v-model="formData.task">
             <button type="submit">Add</button>
-            <span v-if="this.isShowTips">Please input task!</span>
+            <span v-if="isShowTips">Please input task!</span>
             <button @click.prevent="showMore">···</button>
-            <div v-if="this.isShowMore">
+            <div v-if="isShowMore">
                 <textarea placeholder="Add task details" v-model="formData.detail"></textarea>
                 <br>
                 <input type="datetime-local" v-model="formData.deadline">

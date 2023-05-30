@@ -8,7 +8,8 @@ new Vue({
             deadline: ''
         },
         isShowTips: false,
-        isShowMore: false
+        isShowMore: false,
+        keyWord: "",
     },
     methods: {
         getAllTask: function () {
@@ -69,5 +70,13 @@ new Vue({
     },
     mounted() {
         this.getAllTask()
+    },
+    computed: {
+        filterTasks() {
+            return this.tasks.filter((task) => {
+                return task.task.indexOf(this.keyWord) !== -1
+            })
+        }
+
     }
 })
