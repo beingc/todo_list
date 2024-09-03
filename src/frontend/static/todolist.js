@@ -1,3 +1,5 @@
+const apiUrl = "http://localhost:5001";
+
 new Vue({
     el: '#app',
     data: {
@@ -13,14 +15,14 @@ new Vue({
     },
     methods: {
         getAllTask: function () {
-            fetch('http://127.0.0.1:5001/')
+            fetch(`${apiUrl}`)
                 .then(response => response.json())
                 .then(data => { this.tasks = data })
         },
         addTask: function () {
             this.isShowTips = false
             if (this.formData.task) {
-                fetch('http://127.0.0.1:5001/add_task', {
+                fetch(`${apiUrl}/add_task`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(this.formData)
@@ -37,7 +39,7 @@ new Vue({
             }
         },
         delTask: function (task_id) {
-            fetch('http://127.0.0.1:5001/delete_task/' + task_id, {
+            fetch(`${apiUrl}/delete_task/` + task_id, {
                 method: 'DELETE'
             })
                 .then(response => response.json())
@@ -46,7 +48,7 @@ new Vue({
                 })
         },
         completeTask: function (task_id) {
-            fetch('http://127.0.0.1:5001/complete_task/' + task_id, {
+            fetch(`${apiUrl}/complete_task/` + task_id, {
                 method: 'POST'
             })
                 .then(response => response.json())
@@ -55,7 +57,7 @@ new Vue({
                 })
         },
         reDoTask: function (task_id) {
-            fetch('http://127.0.0.1:5001/incomplete_task/' + task_id, {
+            fetch(`${apiUrl}/incomplete_task/` + task_id, {
                 method: 'POST'
             })
                 .then(response => response.json())
