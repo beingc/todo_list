@@ -15,14 +15,14 @@ new Vue({
     },
     methods: {
         getAllTask: function () {
-            fetch(`${apiUrl}`)
+            fetch(`${apiUrl}/api/get_all`)
                 .then(response => response.json())
                 .then(data => { this.tasks = data })
         },
         addTask: function () {
             this.isShowTips = false
             if (this.formData.task) {
-                fetch(`${apiUrl}/add_task`, {
+                fetch(`${apiUrl}/api/add_task`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(this.formData)
@@ -39,7 +39,7 @@ new Vue({
             }
         },
         delTask: function (task_id) {
-            fetch(`${apiUrl}/delete_task/` + task_id, {
+            fetch(`${apiUrl}/api/delete_task/` + task_id, {
                 method: 'DELETE'
             })
                 .then(response => response.json())
@@ -48,7 +48,7 @@ new Vue({
                 })
         },
         completeTask: function (task_id) {
-            fetch(`${apiUrl}/complete_task/` + task_id, {
+            fetch(`${apiUrl}/api/complete_task/` + task_id, {
                 method: 'POST'
             })
                 .then(response => response.json())
@@ -57,7 +57,7 @@ new Vue({
                 })
         },
         reDoTask: function (task_id) {
-            fetch(`${apiUrl}/incomplete_task/` + task_id, {
+            fetch(`${apiUrl}/api/incomplete_task/` + task_id, {
                 method: 'POST'
             })
                 .then(response => response.json())
