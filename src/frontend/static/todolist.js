@@ -1,4 +1,4 @@
-const apiUrl = "http://localhost:5001";
+const apiUrl = "http://localhost:5000";
 
 new Vue({
     el: '#app',
@@ -7,7 +7,8 @@ new Vue({
         formData: {
             task: '',
             detail: '',
-            deadline: ''
+            deadline: '',
+            priority: ''
         },
         isShowTips: false,
         isShowMore: false,
@@ -15,7 +16,7 @@ new Vue({
     },
     methods: {
         getAllTask: function () {
-            fetch(`${apiUrl}/api/get_all`)
+            fetch(`${apiUrl}/api/get_all_tasks`)
                 .then(response => response.json())
                 .then(data => { this.tasks = data })
         },
@@ -39,7 +40,7 @@ new Vue({
             }
         },
         delTask: function (task_id) {
-            fetch(`${apiUrl}/api/delete_task/` + task_id, {
+            fetch(`${apiUrl}/api/remove_task/` + task_id, {
                 method: 'DELETE'
             })
                 .then(response => response.json())
@@ -48,7 +49,7 @@ new Vue({
                 })
         },
         completeTask: function (task_id) {
-            fetch(`${apiUrl}/api/complete_task/` + task_id, {
+            fetch(`${apiUrl}/api/mark_task_done/` + task_id, {
                 method: 'POST'
             })
                 .then(response => response.json())
@@ -57,7 +58,7 @@ new Vue({
                 })
         },
         reDoTask: function (task_id) {
-            fetch(`${apiUrl}/api/incomplete_task/` + task_id, {
+            fetch(`${apiUrl}/api/mark_task_undone/` + task_id, {
                 method: 'POST'
             })
                 .then(response => response.json())
@@ -79,6 +80,5 @@ new Vue({
                 return task.task.indexOf(this.keyWord) !== -1
             })
         }
-
     }
 })
