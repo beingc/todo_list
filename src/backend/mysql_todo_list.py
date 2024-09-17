@@ -26,6 +26,8 @@ class MySQLTodoList(BaseTodoList):
             self.conn.commit()
 
     def add_task(self, task, detail=None, status=0, deadline=None, priority=0):
+        if priority is None or priority == '':
+            priority = 0
         create_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         with self.conn.cursor() as cursor:
             cursor.execute(
@@ -65,31 +67,11 @@ class MySQLTodoList(BaseTodoList):
             self.conn.commit()
 
     def get_task(self, task_id):
-        cursor = self.conn.cursor()
-        cursor.execute("SELECT * FROM todolist where task_id = %s", (task_id,))
-        row = cursor.fetchone()
-        cursor.close()
-        if row:
-            return {
-                'task_id': row[0],
-                'task': row[1],
-                'detail': row[2],
-                'status': row[3],
-                'create_time': row[4],
-                'update_time': row[5],
-                'deadline': row[6],
-                'priority': row[7]
-            }
-        return {}
-
-    def get_all_tasks(self):
-        cursor = self.conn.cursor()
-        cursor.execute("SELECT * FROM todolist")
-        rows = cursor.fetchall()
-        cursor.close()
-        if rows:
-            return [
-                {
+        with self.conn.cursor() as cursor:
+            cursor.execute("SELECT * FROM todolist where task_id = %s", (task_id,))
+            row = cursor.fetchone()
+            if row:
+                return {
                     'task_id': row[0],
                     'task': row[1],
                     'detail': row[2],
@@ -99,14 +81,34 @@ class MySQLTodoList(BaseTodoList):
                     'deadline': row[6],
                     'priority': row[7]
                 }
-                for row in rows]
-        else:
-            return []
+            return {}
+
+    def get_all_tasks(self):
+        with self.conn.cursor() as cursor:
+            cursor.execute("SELECT * FROM todolist")
+            rows = cursor.fetchall()
+            cursor.close()
+            if rows:
+                return [
+                    {
+                        'task_id': row[0],
+                        'task': row[1],
+                        'detail': row[2],
+                        'status': row[3],
+                        'create_time': row[4],
+                        'update_time': row[5],
+                        'deadline': row[6],
+                        'priority': row[7]
+                    }
+                    for row in rows]
+            else:
+                return []
 
     def _update_task_status(self, task_id, status):
         update_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         with self.conn.cursor() as cursor:
-            cursor.execute("update todolist set status = %s, update_time = %s where task_id = %s", (status, update_time, task_id))
+            cursor.execute("update todolist set status = %s, update_time = %s where task_id = %s",
+                           (status, update_time, task_id))
             self.conn.commit()
 
     def mark_task_done(self, task_id):

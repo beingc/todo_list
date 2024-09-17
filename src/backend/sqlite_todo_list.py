@@ -25,6 +25,8 @@ class SQLiteTodoList(BaseTodoList):
                                priority INTEGER NOT NULL DEFAULT 0)''')
 
     def add_task(self, task, detail=None, status=0, deadline=None, priority=0):
+        if priority is None or priority == '':
+            priority = 0
         create_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         with self.conn as conn:
             conn.execute(
