@@ -10,6 +10,17 @@
 <body>
     <div id="app">
         <input type="text" placeholder="search task" v-model="keyWord">
+        <form @submit.prevent="addTask">
+            <input type="text" placeholder="Add new task" v-model="formData.task">
+            <button type="submit">Add</button>
+            <span v-if="isShowTips">Please input task!</span>
+            <button @click.prevent="showMore">···</button>
+            <div v-if="isShowMore">
+                <textarea placeholder="Add task details" v-model="formData.detail"></textarea>
+                <br>
+                <input type="datetime-local" v-model="formData.deadline">
+            </div>
+        </form>
         <table>
             <thead>
                 <tr>
@@ -44,17 +55,6 @@
                 </tr>
             </tbody>
         </table>
-        <form @submit.prevent="addTask">
-            <input type="text" placeholder="Add new task" v-model="formData.task">
-            <button type="submit">Add</button>
-            <span v-if="isShowTips">Please input task!</span>
-            <button @click.prevent="showMore">···</button>
-            <div v-if="isShowMore">
-                <textarea placeholder="Add task details" v-model="formData.detail"></textarea>
-                <br>
-                <input type="datetime-local" v-model="formData.deadline">
-            </div>
-        </form>
     </div>
     <script src="./static/todolist.js"></script>
 </body>

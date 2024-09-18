@@ -7,3 +7,4 @@ venv
 temp
 **/__pycache__
 *.code-workspace
+*.log
