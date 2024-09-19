@@ -3,7 +3,7 @@ from logging.handlers import RotatingFileHandler
 import time
 from functools import wraps
 
-# 日志配置参数
+# Logging configuration parameters
 LOG_FILENAME = 'app.log'
 LOG_MAX_BYTES = 5 * 1024 * 1024
 LOG_BACKUP_COUNT = 3
@@ -29,7 +29,10 @@ if not logger.handlers:
 
 
 def log_function(func):
-    """装饰器：记录方法的进入时间、传入参数、离开时间和返回结果"""
+    """
+    Decorator:
+    logs the entry time, input arguments, exit time, and the result of the function call.
+    """
 
     @wraps(func)
     def wrapper(*args, **kwargs):

@@ -16,7 +16,6 @@ with open(cfg_path, 'r') as f:
 
 @log_function
 def initialize_database(config):
-    """根据配置初始化数据库"""
     db_type = config['database']['type']
     if db_type == 'sqlite':
         db_path = config['database']['sqlite_db']

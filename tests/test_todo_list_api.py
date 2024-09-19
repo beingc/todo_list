@@ -25,7 +25,7 @@ def test_add_task(client):
     })
     assert rv.status_code == 201
     assert rv.json['result'] == "success"
-    # 清理数据
+    # Clean up data
     rv = client.get('/api/clear_tasks')
 
 
@@ -48,6 +48,8 @@ def test_get_task(client):
     assert rv.json['deadline'] == '2024-12-31'
     assert rv.json['priority'] == 1
     assert rv.json['create_time'] == datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    # Clean up data
+    rv = client.get('/api/clear_tasks')
 
 
 def test_remove_task(client):
@@ -88,6 +90,8 @@ def test_edit_task(client):
     })
     assert rv.status_code == 200
     assert rv.json['result'] == "success"
+    # Clean up data
+    rv = client.get('/api/clear_tasks')
 
 
 def test_clear_tasks(client):

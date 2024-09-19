@@ -17,7 +17,7 @@ def mock_mysql():
         mock_conn = MagicMock()
         mock_cursor = MagicMock()
         mock_connect.return_value = mock_conn
-        # 模拟 `with self.conn.cursor() as cursor` 中的游标行为
+        # mock for `with self.conn.cursor() as cursor`
         mock_conn.cursor.return_value.__enter__.return_value = mock_cursor
         yield mock_conn, mock_cursor
 
