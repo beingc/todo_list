@@ -35,11 +35,22 @@ def initialize_database(config):
 todo_list = initialize_database(config)
 
 
+def response(code=0, msg='success', data=None):
+    return jsonify({
+        'code': code,
+        'msg': msg,
+        'data': data
+    })
+
+
 @app.route('/')
 @app.route('/api/get_all_tasks')
 def get_all_tasks():
-    tasks = todo_list.get_all_tasks()
-    return jsonify(tasks)
+    try:
+        tasks = todo_list.get_all_tasks()
+        return jsonify(tasks)
+    except Exception as e:
+        return response(code=500, msg=str(e)), 500
 
 
 @app.route('/api/get_task/<int:task_id>')
